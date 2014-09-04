@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block head %}
+	<style>
+	  body{
+	    font-family: monospace;
+	    margin-top: 100px;
+	  }
+	  canvas{
+	    border:2px solid;
+	    //position:fixed;
+	    margin: 20px;
+	  }
+	</style>
+{% endblock %}
+
+{% block content %}
+
+	<canvas id="Canvas" width="500" height="100"></canvas>	      
+	<br>
+	<button id='analyze'>Analyze</button>
+	<br><br>
+	<div id='result'></div>
+
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+
+	var canvas = document.getElementById("Canvas");
+	var result = document.getElementById("result");   
+	var ctx = canvas.getContext("2d");
+
+	init_board(canvas,'#ddd');
+
+	$('#analyze').click(function () {
+		var dataURL = canvas.toDataURL();
+		$.ajax({
+		  type: "POST",
+		  url: "/analyze",
+		  data: { 
+		     imgBase64: dataURL
+		  }
+		}).done(function(o) {
+		  console.log(o);
+		  result.innerHTML = o;
+		});
+	});
+
+	function init_board(canvas, fillColor) {
+	                    width =100;
+	                    height = 100;
+	                    var radius = 3; // or whatever
+
+	                    var ctx = canvas.getContext("2d");
+	                    // define a custom fillCircle method
+	                    ctx.fillCircle = function(x, y, radius, fillColor) {
+	                        this.fillStyle = fillColor;
+	                        this.beginPath();
+	                        this.moveTo(x, y);
+	                        this.arc(x, y, radius, 0, Math.PI * 2, false);
+	                        this.fill();
+	                    };
+	                    ctx.clearTo = function(fillColor) {
+	                        ctx.fillStyle = fillColor;
+	                        //ctx.fillRect(0, 0, width, height);
+	                    };
+	                    ctx.clearTo(fillColor || "#ddd");
+
+	                    // bind mouse events
+	                    canvas.onmousemove = function(e) {
+	                        if (!canvas.isDrawing) {
+	                           return;
+	                        }
+	                        var x = e.pageX - this.offsetLeft;
+	                        var y = e.pageY - this.offsetTop;
+	                        
+	                        var fillColor = '#ff0000';
+	                        ctx.fillCircle(x, y, radius, fillColor);
+	                    };
+	                    canvas.onmousedown = function(e) {
+	                        canvas.isDrawing = true;
+	                    };
+	                    canvas.onmouseup = function(e) {
+	                        canvas.isDrawing = false;
+	                    };
+	            }
+
+</script>
+{% endblock %}
