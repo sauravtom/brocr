@@ -10,6 +10,7 @@ import base64
 
 from PIL import Image
 import pytesseract
+##
 
 def image_to_text(img_data):
     #to correct padding in the base64_string
