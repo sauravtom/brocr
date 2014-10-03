@@ -29,7 +29,12 @@ def analyze():
     if not text:
         text = "Could not identify the image."
     else:
-        text=text+'='+dothings(text)
+        flag=0
+        for tex in text:
+            if ord(tex)>57 or ord(tex)<32:
+                flag=1
+        if flag!=1:
+            text=text+'='+dothings(text)
     return text
 
 @app.route('/')
