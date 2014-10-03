@@ -8,6 +8,7 @@ from flask import render_template,request,make_response,Response,send_from_direc
 import json,datetime,os,hashlib,datetime
 import base64
 
+import expeval
 from PIL import Image
 import pytesseract
 ##
@@ -28,6 +29,13 @@ def analyze():
     text = image_to_text(request.form['imgBase64'])
     if not text:
         text = "Could not identify the image."
+    else:
+        flag=0
+        for tex in text:
+            if ord(tex)>57 or ord(tex)<32:
+                flag=1
+        if flag!=1:
+            text=text+'='+dothings(text)
     return text
 
 @app.route('/')

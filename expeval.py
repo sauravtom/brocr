@@ -1,7 +1,6 @@
 #!/usr/local/bin/python
 # encoding: UTF-8
 
-postfix = []
 temp = []
 decimal=[0,1,2,3,4,5,6,7,8,9]
 operator = -10
@@ -57,6 +56,7 @@ def doMath(op, op1, op2):
 
  
 def makepostfix(infix) : 
+    postfix=[]
     for i in infix :
         type = typeof(i)
         if type is leftpar :
@@ -78,9 +78,14 @@ def makepostfix(infix) :
                  
     while len(temp) > 0 :
         postfix.append(temp.pop())
+        
+    return postfix    
   
 
-
+def dothings(text):
+    foo=makepostfix(text)
+    bar=postfixeval(foo)
+    return bar
 
 
 
