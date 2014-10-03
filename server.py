@@ -9,6 +9,7 @@ import json,datetime,os,hashlib,datetime
 import base64
 
 import expeval
+from expeval import dothings
 from PIL import Image
 import pytesseract
 ##
