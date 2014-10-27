@@ -22,7 +22,20 @@ def image_to_text(img_data):
     fd = open('image.png', 'wb')
     fd.write(binary_data)
     fd.close()
-    text = pytesseract.image_to_string(Image.open('image.png'))
+    im2=cv2.imread('image.png')
+    im2=cv2.cvtColor(im2,cv2.COLOR_BGR2GRAY)
+    blur = cv2.GaussianBlur(gray,(5,5),0)
+    im3 = cv2.adaptiveThreshold(blur,255,1,1,11,2)
+    im=im3.copy()
+    contours,hierarchy = cv2.findContours(im,cv2.RETR_LIST,cv2.CHAIN_APPROX_SIMPLE)
+    text=''
+
+    for cnt in contours:
+        if cv2.contourArea(cnt)>30:
+            [x,y,w,h] = cv2.boundingRect(cnt)
+            bbox = (x, y, x+w, y+h)
+            im1=im.crop(bbox)
+            text = text + pytesseract.image_to_string(im1,'English',10,'True')
     return text
 
 @app.route('/analyze', methods=['POST'])
