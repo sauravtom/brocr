@@ -10,6 +10,7 @@ import base64
 
 import expeval
 from expeval import dothings
+import cv2
 from PIL import Image
 import pytesseract
 ##
